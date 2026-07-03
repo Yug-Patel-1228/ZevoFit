@@ -2,14 +2,15 @@
 //  HomeView.swift
 //  ZevoFit
 //
-//  Created by Yug on 7/3/26.
-//
 
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
 
     @StateObject private var viewModel = HomeViewModel()
+
+    @Query private var profiles: [UserProfile]
 
     var body: some View {
 
@@ -17,113 +18,29 @@ struct HomeView: View {
 
             ZStack {
 
-                // Background
                 GlassBackground()
 
                 ScrollView {
 
-                    VStack(alignment: .leading, spacing: AppSpacing.large) {
+                    VStack(spacing: AppSpacing.large) {
 
-                        // Greeting
+                        HeroHeader(
+                            userName: currentUserName
+                        )
 
-                        VStack(alignment: .leading, spacing: AppSpacing.small) {
+                        DailyGoalCard(
+                            progress: viewModel.dailyGoal
+                        )
 
-                            Text("Good Afternoon 👋")
-                                .font(AppTypography.headline)
-                                .foregroundStyle(AppColors.textSecondary)
+                        MetricsGrid(
+                            viewModel: viewModel,
+                            currentWeight: currentWeight
+                        )
 
-                            Text(viewModel.userName)
-                                .font(AppTypography.largeTitle)
-                                .fontWeight(.bold)
-
-                        }
-
-                        // Daily Goal
-
-                        GlassCard {
-
-                            VStack(spacing: AppSpacing.large) {
-
-                                Text("Today's Goal")
-                                    .font(AppTypography.headline)
-
-                                ProgressRing(
-                                    progress: viewModel.dailyGoal,
-                                    color: .blue
-                                )
-
-                                Text("\(Int(viewModel.dailyGoal * 100))% Complete")
-                                    .font(AppTypography.body)
-                                    .foregroundStyle(AppColors.textSecondary)
-
-                            }
-
-                        }
-
-                        // Metrics
-
-                        LazyVGrid(
-                            columns: [
-                                GridItem(.flexible()),
-                                GridItem(.flexible())
-                            ],
-                            spacing: AppSpacing.medium
-                        ) {
-
-                            MetricCard(
-                                title: "Calories",
-                                value: viewModel.calories,
-                                symbol: AppSymbols.calories,
-                                color: .orange
-                            )
-
-                            MetricCard(
-                                title: "Water",
-                                value: viewModel.water,
-                                symbol: AppSymbols.water,
-                                color: .blue
-                            )
-
-                            MetricCard(
-                                title: "Protein",
-                                value: viewModel.protein,
-                                symbol: AppSymbols.nutrition,
-                                color: .green
-                            )
-
-                            MetricCard(
-                                title: "Weight",
-                                value: viewModel.weight,
-                                symbol: AppSymbols.weight,
-                                color: .purple
-                            )
-
-                        }
-
-                        // Workout
-
-                        GlassCard {
-
-                            VStack(alignment: .leading, spacing: AppSpacing.medium) {
-
-                                Text("Today's Workout")
-                                    .font(AppTypography.headline)
-
-                                Text(viewModel.workoutName)
-                                    .font(AppTypography.title)
-                                    .fontWeight(.bold)
-
-                                Text(viewModel.workoutSubtitle)
-                                    .foregroundStyle(AppColors.textSecondary)
-
-                                Button("Start Workout") {
-
-                                }
-                                .buttonStyle(.borderedProminent)
-
-                            }
-
-                        }
+                        WorkoutCard(
+                            workoutName: viewModel.workoutName,
+                            workoutSubtitle: viewModel.workoutSubtitle
+                        )
 
                     }
                     .padding()
@@ -135,6 +52,20 @@ struct HomeView: View {
 
         }
 
+    }
+
+    // MARK: - Computed Properties
+
+    private var currentProfile: UserProfile? {
+        profiles.first
+    }
+
+    private var currentUserName: String {
+        currentProfile?.name.isEmpty == false ? currentProfile!.name : "Athlete"
+    }
+
+    private var currentWeight: Double {
+        currentProfile?.weight ?? viewModel.weight
     }
 
 }

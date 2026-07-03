@@ -10,15 +10,15 @@ final class HomeViewModel: ObservableObject {
 
     @Published var userName = "Yug"
 
-    @Published var calories = "2450"
+    @Published var calories: Int = 2450
 
-    @Published var water = "2.8 L"
+    @Published var water: Double = 2.8
 
-    @Published var protein = "145 g"
+    @Published var protein: Double = 145
 
-    @Published var weight = "73.2 kg"
+    @Published var weight: Double = 73.2
 
-    @Published var dailyGoal = 0.72
+    @Published var dailyGoal: Double = 0.72
 
     @Published var workoutName = "Push Day"
 
