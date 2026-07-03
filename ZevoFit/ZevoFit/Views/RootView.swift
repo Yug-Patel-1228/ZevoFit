@@ -1,16 +1,38 @@
-//
-//  RootView.swift
-//  ZevoFit
-//
-//  Created by Yug  on 7/3/26.
-//
-
 import SwiftUI
 
 struct RootView: View {
 
+    @State private var showOnboarding = false
+    @State private var showHome = false
+
     var body: some View {
-        SplashView()
+
+        if showHome {
+
+            MainTabView()
+
+        } else if showOnboarding {
+
+            OnboardingView(onGetStarted: {
+
+                withAnimation(.easeInOut) {
+                    showHome = true
+                }
+
+            })
+
+        } else {
+
+            SplashView(onFinished: {
+
+                withAnimation(.easeInOut) {
+                    showOnboarding = true
+                }
+
+            })
+
+        }
+
     }
 
 }

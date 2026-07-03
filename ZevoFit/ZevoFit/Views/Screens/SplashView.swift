@@ -2,6 +2,8 @@ import SwiftUI
 
 struct SplashView: View {
 
+    let onFinished: () -> Void
+
     @State private var logoVisible = false
     @State private var textVisible = false
 
@@ -46,6 +48,10 @@ struct SplashView: View {
                 textVisible = true
             }
 
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                onFinished()
+            }
+
         }
 
     }
@@ -53,5 +59,5 @@ struct SplashView: View {
 }
 
 #Preview {
-    SplashView()
+    SplashView(onFinished: {})
 }
